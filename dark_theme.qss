@@ -1,0 +1,108 @@
+/* Fondo general */
+QWidget {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    font-size: 12pt; /* Aumentado */
+}
+
+/* Entradas de texto y cajas */
+QLineEdit, QComboBox, QTextEdit, QSpinBox {
+    background-color: #2c2c2c;
+    border: 1px solid #3c3c3c;
+    padding: 5px;
+    color: #ffffff;
+}
+
+/* Etiquetas */
+QLabel {
+    color: #ffffff;
+}
+
+/* BOTONES en VERDE con fuerza */
+QPushButton {
+    background-color: #00B050 !important;
+    color: #ffffff;
+    border: none;
+    padding: 8px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #33c471 !important;
+}
+
+QPushButton:pressed {
+    background-color: #008040 !important;
+}
+
+/* Pestañas */
+QTabWidget::pane {
+    border: 1px solid #2c2c2c;
+}
+
+QTabBar::tab {
+    background: #2c2c2c;
+    padding: 8px;
+}
+
+QTabBar::tab:selected {
+    background: #3a3a3a;
+    font-weight: bold;
+}
+
+/* Ventanas emergentes */
+QMessageBox {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+QRadioButton {
+    color: #ffffff;
+}
+
+QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+}
+
+QRadioButton::indicator:unchecked {
+    border: 2px solid #00B050;
+    background-color: transparent;
+}
+
+QRadioButton::indicator:checked {
+    border: 2px solid #00B050;
+    background-color: #00B050;
+}
+
+/* ComboBox (desplegables) */
+QComboBox {
+    background-color: #2c2c2c;
+    border: 2px solid #00B050;
+    padding: 5px;
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+QComboBox:hover {
+    border: 2px solid #33c471;
+}
+
+QComboBox::drop-down {
+    background-color: #00B050;
+}
+
+/* SpinBox (selector de número) */
+QSpinBox {
+    background-color: #2c2c2c;
+    border: 2px solid #00B050;
+    padding: 5px;
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+QSpinBox:hover {
+    border: 2px solid #33c471;
+}
+
+

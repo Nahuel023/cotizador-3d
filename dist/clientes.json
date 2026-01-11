@@ -1,0 +1,102 @@
+{
+    "CL001": {
+        "nombre": "test",
+        "fecha_alta": "05/06/2025"
+    },
+    "CL002": {
+        "nombre": "Brian Ellero",
+        "fecha_alta": "09/06/2025"
+    },
+    "CL003": {
+        "nombre": "M",
+        "fecha_alta": "10/06/2025"
+    },
+    "CL004": {
+        "nombre": "starlinkmini",
+        "fecha_alta": "20/06/2025"
+    },
+    "CL005": {
+        "nombre": "lila",
+        "fecha_alta": "20/06/2025"
+    },
+    "CL006": {
+        "nombre": "tomi",
+        "fecha_alta": "20/06/2025"
+    },
+    "CL007": {
+        "nombre": "stalinkmini",
+        "fecha_alta": "22/06/2025"
+    },
+    "CL008": {
+        "nombre": "LAMP",
+        "fecha_alta": "23/06/2025"
+    },
+    "CL009": {
+        "nombre": "B",
+        "fecha_alta": "23/07/2025"
+    },
+    "CL010": {
+        "nombre": "SC",
+        "fecha_alta": "24/07/2025"
+    },
+    "CL011": {
+        "nombre": "D",
+        "fecha_alta": "04/08/2025"
+    },
+    "CL012": {
+        "nombre": "Cubo de Calabaza de Halloween",
+        "fecha_alta": "05/08/2025"
+    },
+    "CL013": {
+        "nombre": "Calabaza de Halloween XXL aterradora (Caja de dulces)",
+        "fecha_alta": "05/08/2025"
+    },
+    "CL014": {
+        "nombre": "LAMAS",
+        "fecha_alta": "06/08/2025"
+    },
+    "CL015": {
+        "nombre": "DEFY",
+        "fecha_alta": "19/08/2025"
+    },
+    "CL016": {
+        "nombre": "Club Robotica",
+        "fecha_alta": "20/08/2025"
+    },
+    "CL017": {
+        "nombre": "Golf",
+        "fecha_alta": "22/08/2025"
+    },
+    "CL018": {
+        "nombre": "Tripode",
+        "fecha_alta": "24/08/2025"
+    },
+    "CL019": {
+        "nombre": "Nati",
+        "fecha_alta": "27/08/2025"
+    },
+    "CL020": {
+        "nombre": "TROFEO",
+        "fecha_alta": "02/09/2025"
+    },
+    "CL021": {
+        "nombre": "LOL",
+        "fecha_alta": "21/09/2025"
+    },
+    "CL022": {
+        "nombre": "defyborunte",
+        "fecha_alta": "14/10/2025"
+    },
+    "CL023": {
+        "nombre": "dead",
+        "fecha_alta": "19/10/2025"
+    },
+    "CL024": {
+        "nombre": "angel",
+        "fecha_alta": "22/11/2025"
+    },
+    "CL025": {
+        "nombre": "germanale",
+        "fecha_alta": "02/12/2025"
+    }
+}

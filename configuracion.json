@@ -1,0 +1,15 @@
+{
+    "materiales": {
+        "PLA": 23000.0,
+        "PETG": 16450.0,
+        "ABS": 19000.0,
+        "TPU": 22700.0
+    },
+    "configuracion": {
+        "precio_kwh": 168.0,
+        "consumo_kw": 0.3,
+        "precio_hora_diseno": 8500.0,
+        "margen_ganancia": 100.0,
+        "precio_desgaste_hora": 200.0
+    }
+}
