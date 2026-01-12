@@ -16,7 +16,7 @@ st.set_page_config(
 # --- CONSTANTES ---
 CONFIG_FILE = "configuracion.json"
 CREDENTIALS_JSON = 'credenciales.json'
-SHEET_NAME = 'PythonProyecTabla'
+SHEET_NAME = 'PythonProyecTabla' # ¡Asegurate que tu hoja en Drive se llame EXACTAMENTE así!
 
 # --- DATOS POR DEFECTO ---
 DEFAULT_PRECIO_MATERIAL = {"PLA": 20000, "PETG": 16450, "ABS": 19000, "TPU": 22700, "Resina": 35000}
@@ -27,6 +27,7 @@ DEFAULT_CONFIG = {
 
 # --- FUNCIONES DE CARGA Y GUARDADO ---
 def load_config():
+    # Intenta cargar configuración local si existe
     if os.path.exists(CONFIG_FILE):
         try:
             with open(CONFIG_FILE, "r") as f:
@@ -40,20 +41,41 @@ def save_config(data):
         json.dump(data, f, indent=4)
 
 def subir_a_drive(datos):
-    """Sube una lista de datos a Google Sheets"""
-    if not os.path.exists(CREDENTIALS_JSON):
-        st.error("❌ No se encontró el archivo credenciales.json")
-        return False
+    """Sube una lista de datos a Google Sheets (Compatible Local y Nube)"""
+    # SCOPES ACTUALIZADOS (Más estables)
+    scope = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+    ]
     
     try:
-        scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-        creds = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_JSON, scope)
+        # 1. Intentar cargar desde Streamlit Secrets (Nube)
+        if "gcp_service_account" in st.secrets:
+            creds_dict = st.secrets["gcp_service_account"]
+            creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+        
+        # 2. Si no, intentar cargar desde archivo local (PC)
+        elif os.path.exists(CREDENTIALS_JSON):
+            creds = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_JSON, scope)
+        
+        else:
+            st.error("❌ No se encontraron credenciales. Configura los Secrets en Streamlit Cloud.")
+            return False
+
+        # Conectar y subir
         client = gspread.authorize(creds)
-        sheet = client.open(SHEET_NAME).sheet1
-        sheet.append_row(datos)
-        return True
+        
+        # Intentar abrir la hoja
+        try:
+            sheet = client.open(SHEET_NAME).sheet1
+            sheet.append_row(datos)
+            return True
+        except gspread.SpreadsheetNotFound:
+            st.error(f"❌ No encuentro la hoja '{SHEET_NAME}'. Revisa el nombre en Google Drive.")
+            return False
+
     except Exception as e:
-        st.error(f"❌ Error conectando con Google Drive: {e}")
+        st.error(f"❌ Error técnico conectando con Drive: {e}")
         return False
 
 # --- INICIO DE LA APP ---
@@ -87,7 +109,7 @@ with tab1:
     with c_mat:
         material = st.selectbox("Material", list(precios_materiales.keys()))
     with c_col:
-        color = st.selectbox("Color", ["Negro", "Blanco", "Gris", "Rojo", "Azul", "Naranja", "Verde", "Multicolor"]) # Puedes hacerlo editable con st.text_input si prefieres
+        color = st.selectbox("Color", ["Negro", "Blanco", "Gris", "Rojo", "Azul", "Naranja", "Verde", "Multicolor"])
     
     peso = st.number_input("Peso Total (g)", min_value=0.0, format="%.2f")
     
@@ -158,11 +180,11 @@ with tab1:
                 peso, txt_tiempo, cantidad, hs_diseno, unitario, total_lote
             ]
             
-            if subir_a_drive(datos):
-                st.toast("Guardado en Google Sheets con éxito!", icon="☁️")
-                # Guardar en historial de sesión local
-                if 'historial' not in st.session_state: st.session_state.historial = []
-                st.session_state.historial.append(datos)
+            with st.spinner("Guardando en la nube..."):
+                if subir_a_drive(datos):
+                    st.toast("Guardado en Google Sheets con éxito!", icon="☁️")
+                    if 'historial' not in st.session_state: st.session_state.historial = []
+                    st.session_state.historial.append(datos)
 
 # ================= TAB 2: LLAVEROS =================
 with tab2:
@@ -188,16 +210,16 @@ with tab2:
                 0, "N/A", cant_llav, 0, prec_llav, total_llav
             ]
             
-            if subir_a_drive(datos):
-                st.toast("Venta registrada en Drive!", icon="☁️")
-                if 'historial' not in st.session_state: st.session_state.historial = []
-                st.session_state.historial.append(datos)
+            with st.spinner("Guardando en la nube..."):
+                if subir_a_drive(datos):
+                    st.toast("Venta registrada en Drive!", icon="☁️")
+                    if 'historial' not in st.session_state: st.session_state.historial = []
+                    st.session_state.historial.append(datos)
 
 # ================= TAB 3: HISTORIAL =================
 with tab3:
     st.write("📋 Historial de esta sesión:")
     if 'historial' in st.session_state and st.session_state.historial:
-        # Convertir a DataFrame para mostrar bonito
         headers = ["Fecha", "Hora", "Resp.", "Cliente", "Modelo", "Tipo", "Mat", "Color", "Peso", "Tiempo", "Cant", "Hs Dis", "Unitario", "Total"]
         df = pd.DataFrame(st.session_state.historial, columns=headers)
         st.dataframe(df)
@@ -207,6 +229,7 @@ with tab3:
 # ================= TAB 4: CONFIGURACIÓN =================
 with tab4:
     st.header("⚙️ Configuración de Precios")
+    st.warning("⚠️ Nota: Al estar en la nube, estos cambios se reiniciarán si la app se recarga.")
     
     with st.form("config_form"):
         st.subheader("Materiales ($/kg)")
@@ -221,7 +244,7 @@ with tab4:
         new_kwh = st.number_input("Precio kWh", value=float(params_config["precio_kwh"]))
         new_consumo = st.number_input("Consumo (kW)", value=float(params_config["consumo_kw"]), format="%.3f")
         new_ganancia = st.number_input("Margen Ganancia (%)", value=float(params_config["margen_ganancia"]))
-        new_desgaste = st.number_input("Desgaste Maquina ($/h)", value=float(params_config["precio_desgaste_hora"])) # Agregado que faltaba editar en GUI anterior
+        new_desgaste = st.number_input("Desgaste Maquina ($/h)", value=float(params_config["precio_desgaste_hora"]))
         new_hora_diseno = st.number_input("Precio Hora Diseño ($)", value=float(params_config["precio_hora_diseno"]))
 
         submitted = st.form_submit_button("Guardar Cambios")
@@ -238,5 +261,5 @@ with tab4:
                 }
             }
             save_config(new_data)
-            st.success("Configuración actualizada y guardada en JSON.")
-            st.rerun() # Recarga la app para tomar los nuevos precios
+            st.success("Configuración temporal actualizada.")
+            st.rerun()
